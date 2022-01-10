@@ -156,7 +156,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
 	})
 
 
-	describe('sending tokens through the exchange', () => {
+	describe('delegated token transfers', () => {
 		
 		let result
 		let amount
@@ -210,19 +210,17 @@ contract('Token', ([deployer, receiver, exchange]) => {
 
 		describe('failure', async() => {
 			
-			/*
-			it('rejects insufficient balances', async() =>{
-				let invalidAmount 
-				invalidAmount = tokens(100000000) //100 million - greater than total supply of all tokens
-				await token.transfer(receiver, invalidAmount, {from: deployer}).should.be.rejectedWith(EVM_REVERT)
+		
+			it('rejects insufficient amounts', async() =>{
+				const invalidAmount = tokens(100000000) //100 million - greater than total supply of all tokens
+				await token.transfer(deployer, receiver, {from: exchange}).should.be.rejectedWith(EVM_REVERT)
 
-				invalidAmount = tokens(10) //100 million - greater than total supply of all tokens
-				await token.transfer(deployer, invalidAmount, {from: receiver}).should.be.rejectedWith(EVM_REVERT)
+	
 			})
 
 			it('rejects invalid recipients', async () =>{
-				await token.transfer(0x0, amount, { from: deployer }).should.be.rejected
-			})*/
+				await token.transfer(0x0, amount, { from: exchange }).should.be.rejected
+			})
 		})
 	})
 
