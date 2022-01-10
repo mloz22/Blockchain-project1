@@ -38,7 +38,7 @@ contract Token {
 		balanceOf[_from] = balanceOf[_from].sub(_value);
 		balanceOf[_to] = balanceOf[_to].add(_value);
 		//event 
-		emit Transfer(msg.sender, _to, _value);
+		emit Transfer(_from, _to, _value);
 	}
 
 	//Approve tokens

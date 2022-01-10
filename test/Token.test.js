@@ -179,7 +179,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
 				//After transfer
 				balanceOf = await token.balanceOf(deployer)
 				balanceOf.toString().should.equal(tokens(999900).toString())
-				console.log("deployer balance after transfer", balanceOf.toString())
+				console.log("deployer balance  after transfer", balanceOf.toString())
 				
 				balanceOf = await token.balanceOf(receiver)
 				balanceOf.toString().should.equal(tokens(100).toString())
@@ -187,9 +187,9 @@ contract('Token', ([deployer, receiver, exchange]) => {
 
 			})
 
-			/*
+			
 			it('emits a Transfer event', async() => {
-				//console.log(result.logs)
+				
 				const log  = result.logs[0]
 				log.event.should.eq('Transfer')
 				const event = log.args
@@ -199,7 +199,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
 				event.value.toString().should.equal(amount.toString(), 'value is correct')
 				
 			})
-			*/
+			
 		})
 		
 
