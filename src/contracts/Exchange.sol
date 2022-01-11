@@ -7,10 +7,12 @@ pragma solidity ^0.5.0;
 contract Exchange {
 	//Variables
 	address public feeAccount; //the account which receives exchange fees
+	uint256 public feePercent; //fee percentage
 	
-	//Set the fee account
-	constructor(address _feeAccount) public {
+	//Set the fee account and percent
+	constructor(address _feeAccount, uint256 _feePercent) public {
 		feeAccount = _feeAccount;
+		feePercent = _feePercent;
 	}
 }
 
