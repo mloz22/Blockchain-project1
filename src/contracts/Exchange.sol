@@ -14,8 +14,8 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 // [X] Deposit Ether
 // [X] Withdraw Ether
 // [X] Deposit tokens
-// [ ] Withdraw tokens
-// [ ] Check balances
+// [X] Withdraw tokens
+// [X] Check balances
 // [ ] Make order
 // [ ] Cancel order
 // [ ] Fill order 
@@ -54,7 +54,7 @@ contract Exchange {
 	function depositEther() payable public {
 		// keeps track of the amount of Ether inside the token's mapping. It'll reduce the amount of storage on the blockchain.
 		tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].add(msg.value);
-			// Emit event
+		// Emit event
 		emit Deposit(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
 	}
 
@@ -65,7 +65,7 @@ contract Exchange {
 		emit Withdraw(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender] );
 	}
 
-	function depositToken(address _token, uint256 _amount) public {
+	function depositToken(address _token, uint _amount) public {
 		// Don't allow Ether deposits
 		require(_token != ETHER);
 		// Which token? --any ERC20, paramenter of _token...How much of that token? parameter of _amount
@@ -91,4 +91,7 @@ contract Exchange {
 		emit Withdraw(_token, msg.sender, _amount, tokens[_token][msg.sender] );
 	}
 
+	function balanceOf(address _token, address _user) public view returns (uint256) {
+		return tokens[_token][_user];
+	}
 }
