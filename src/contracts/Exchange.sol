@@ -29,12 +29,16 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 contract Exchange {
 	using SafeMath for uint;
 
-	//Variables
-	address public feeAccount; //the account which receives exchange fees
-	uint256 public feePercent; //fee percentage
+	// Variables
+	address public feeAccount; // the account which receives exchange fees
+	uint256 public feePercent; // fee percentage
 	mapping(address => mapping(address => uint256)) public tokens;
 
-	//Set the fee account and percent
+	// Events
+	event Deposit(address token, address user, uint256 amount, uint256 balance);
+
+
+	// Set the fee account and percent
 	constructor(address _feeAccount, uint256 _feePercent) public {
 		feeAccount = _feeAccount;
 		feePercent = _feePercent;
@@ -50,6 +54,6 @@ contract Exchange {
 		tokens[_token][msg.sender] = tokens[_token][msg.sender].add(_amount);
 
 		// Emit event
-
+		emit Deposit(_token, msg.sender, _amount, tokens[_token][msg.sender]);
 	}
 }
