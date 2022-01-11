@@ -78,6 +78,10 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
 				await exchange.depositToken(token.address, tokens(10), {from: user1}).should.be.rejectedWith(EVM_REVERT)
 
 			})
+
+			it('rejects Ether deposits', async() => {
+				await exchange.depositToken('0x0000000000000000000000000000000000000000', tokens(10), {from: user1}).should.be.rejectedWith(EVM_REVERT)
+			})
 		})
 
 		

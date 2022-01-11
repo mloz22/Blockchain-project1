@@ -32,6 +32,8 @@ contract Exchange {
 	// Variables
 	address public feeAccount; // the account which receives exchange fees
 	uint256 public feePercent; // fee percentage
+	address constant ETHER = address(0); // Stores Ether in tokens mapping with a blank address
+
 	mapping(address => mapping(address => uint256)) public tokens;
 
 	// Events
@@ -44,7 +46,16 @@ contract Exchange {
 		feePercent = _feePercent;
 	}
 
+	function depositEther() payable public {
+		// keeps track of the amount of Ether inside the token's mapping. It'll reduce the amount of storage on the blockchain.
+		tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].add(msg.value);
+			// Emit event
+		emit Deposit(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
+	}
+
 	function depositToken(address _token, uint256 _amount) public {
+		// Don't allow Ether deposits
+		require(_token != ETHER);
 		// Which token? --any ERC20, paramenter of _token...How much of that token? parameter of _amount
 
 		// Send toeksn to this contract
@@ -55,5 +66,7 @@ contract Exchange {
 
 		// Emit event
 		emit Deposit(_token, msg.sender, _amount, tokens[_token][msg.sender]);
+
+		
 	}
 }
