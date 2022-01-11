@@ -196,11 +196,14 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
 	  })
 
 	  describe('failure', async() =>{
-	  	/*
-	  	it('rejects withdraws for insufficient balances', async () => {
-	  		await exchange.withdrawEther(token(100), {from: user1 }).should.be.rejectedWith(EVM_REVERT)
+	  	it('rejects Ether withdrawals', async () => {
+	  		await exchange.withdrawToken(ETHER_ADDRESS, tokens(10), {from: user1 }).should.be.rejectedWith(EVM_REVERT)
+	  	})	
+	  	it('failure for withdrawals with insufficient balances', async () => {
+	  		// Attempt to withdraw TOKENS without depositing any first
+	  		await exchange.withdrawToken(token.address, tokens(10), {from: user1 }).should.be.rejectedWith(EVM_REVERT)
 	  	})
-	  	*/
+	  	
 	  })
 
 	})	
