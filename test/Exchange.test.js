@@ -181,7 +181,7 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
 			balance.toString().should.equal('0')
 		})
 
-		/*
+		
 		it('emits a "Withdraw" event', async() => {
 			const log = result.logs[0]
 			log.event.should.eq('Withdraw')
@@ -191,7 +191,7 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
 			event.amount.toString().should.equal(amount.toString())
 			event.balance.toString().should.equal('0')
 		})
-		*/
+		
 		
 	  })
 
