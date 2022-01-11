@@ -1,6 +1,8 @@
 pragma solidity ^0.5.0;
 
 import "./Token.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+
 
 //Deposit & Withdraw Funds
 //Manage Orders - Make or Cancel
@@ -25,10 +27,13 @@ import "./Token.sol";
 
 
 contract Exchange {
+	using SafeMath for uint;
+
 	//Variables
 	address public feeAccount; //the account which receives exchange fees
 	uint256 public feePercent; //fee percentage
-	
+	mapping(address => mapping(address => uint256)) public tokens;
+
 	//Set the fee account and percent
 	constructor(address _feeAccount, uint256 _feePercent) public {
 		feeAccount = _feeAccount;
@@ -36,14 +41,13 @@ contract Exchange {
 	}
 
 	function depositToken(address _token, uint256 _amount) public {
-		// Which token? --any ERC20, paramenter of _token
-
-		// How much of that token? parameter of _amount
+		// Which token? --any ERC20, paramenter of _token...How much of that token? parameter of _amount
 
 		// Send toeksn to this contract
-		Token(_token).transferFrom(msg.sender, address(this), _amount);
+		require(Token(_token).transferFrom(msg.sender, address(this), _amount)); //must return a true value
 
 		// Manage deposit -- update balance
+		tokens[_token][msg.sender] = tokens[_token][msg.sender].add(_amount);
 
 		// Emit event
 
