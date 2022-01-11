@@ -9,10 +9,10 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 //Handle Trades - Charge fees
 
 
-// TODO:
+// TODO: 
 // [X] Set the fee account
 // [X] Deposit Ether
-// [ ] Withdraw Ether
+// [X] Withdraw Ether
 // [X] Deposit tokens
 // [ ] Withdraw tokens
 // [ ] Check balances
@@ -38,7 +38,7 @@ contract Exchange {
 
 	// Events
 	event Deposit(address token, address user, uint256 amount, uint256 balance);
-
+	event Withdraw(address token, address user, uint amount, uint balance);
 
 	// Set the fee account and percent
 	constructor(address _feeAccount, uint256 _feePercent) public {
@@ -59,7 +59,10 @@ contract Exchange {
 	}
 
 	function withdrawEther(uint _amount) public {
+		require(tokens[ETHER][msg.sender] >= _amount);
 		tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
+		msg.sender.transfer(_amount);
+		emit Withdraw(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender] );
 	}
 
 	function depositToken(address _token, uint256 _amount) public {
