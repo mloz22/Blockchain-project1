@@ -35,10 +35,40 @@ contract Exchange {
 	address constant ETHER = address(0); // Stores Ether in tokens mapping with a blank address
 
 	mapping(address => mapping(address => uint256)) public tokens;
+	// A way to store the order on the blockchain
+	mapping (uint256 => _Order) public orders;
+	uint public orderCount; //keeps track of orders as a counter cache, starts at 0
 
 	// Events
 	event Deposit(address token, address user, uint256 amount, uint256 balance);
-	event Withdraw(address token, address user, uint amount, uint balance);
+	event Withdraw(address token, address user, uint256 amount, uint256 balance);
+	event Order(
+		uint256 id,
+		address user,
+		address tokenGet,
+		uint amountGet,
+		address tokenGive,
+		uint amountGive,
+		uint timestamp
+	);
+	
+	//Structs
+	struct _Order{
+		
+		// A way to model the order
+		//Attributes 
+		uint256 id; 
+		address user;
+		address tokenGet; //token wanted
+		uint amountGet; 
+		address tokenGive; //token to be given
+		uint amountGive;
+		uint timestamp;
+	}
+
+
+	
+
 
 	// Set the fee account and percent
 	constructor(address _feeAccount, uint256 _feePercent) public {
@@ -94,4 +124,14 @@ contract Exchange {
 	function balanceOf(address _token, address _user) public view returns (uint256) {
 		return tokens[_token][_user];
 	}
+	
+	// Add the order to storage
+	function makeOrder(address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) public {
+		// Instantiate the struct
+		orderCount = orderCount.add(1);
+		orders[orderCount] = _Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
+
+		emit Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
+	}
+
 }
