@@ -257,6 +257,51 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
 
 	})	
 
+	describe('order actions', async () => {
+		
+
+		beforeEach(async() =>{
+			// user1 deposits ether
+			await exchange.depositEther({ from: user1, value: ether(1)})
+
+			// user1 makes an order to buy tokens with Ether
+			await exchange.makeOrder(token.address, tokens(1), ETHER_ADDRESS, ether(1), { from: user1 })
+		})
+		describe('cancelling order', async() => {
+			let result
+
+			describe('success', async () => {
+				beforeEach(async () => {
+					result = await exchange.cancelOrder('1', { from: user1 })
+				})
+
+				it('updates the cancelled order', async () => {
+					const orderCancelled = await exchange.orderCancelled(1)
+					orderCancelled.should.equal(true)
+				})
+
+				it('emits a "Cancel" event', async () => {
+				const log = result.logs[0]
+				log.event.should.eq('Cancel')
+				const event = log.args
+				event.id.toString().should.equal('1', 'id is correct')
+				event.user.should.equal(user1, 'user is correct')
+				event.tokenGet.should.equal(token.address, 'tokenGet is correct')
+				event.amountGet.toString().should.equal(tokens(1).toString(), 'amountGet is correct')
+				event.tokenGive.should.equal(ETHER_ADDRESS, 'tokenGive is correct')
+				event.amountGive.toString().should.equal(ether(1).toString(), 'amountGive is correct')
+				event.timestamp.toString().length.should.be.at.least(1, 'timestamp is present')
+
+
+			})
+
+			})
+
+			describe('failure', async () => {
+
+			})
+		})
+	})
 
 
 })

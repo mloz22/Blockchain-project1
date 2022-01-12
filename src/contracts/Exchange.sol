@@ -16,7 +16,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 // [X] Deposit tokens
 // [X] Withdraw tokens
 // [X] Check balances
-// [ ] Make order
+// [X] Make order
 // [ ] Cancel order
 // [ ] Fill order 
 // [ ] Charge fees
@@ -38,11 +38,23 @@ contract Exchange {
 	// A way to store the order on the blockchain
 	mapping (uint256 => _Order) public orders;
 	uint public orderCount; //keeps track of orders as a counter cache, starts at 0
+	mapping (uint256 => bool) public orderCancelled;
+
 
 	// Events
 	event Deposit(address token, address user, uint256 amount, uint256 balance);
 	event Withdraw(address token, address user, uint256 amount, uint256 balance);
 	event Order(
+		uint256 id,
+		address user,
+		address tokenGet,
+		uint amountGet,
+		address tokenGive,
+		uint amountGive,
+		uint timestamp
+	);
+
+	event Cancel(
 		uint256 id,
 		address user,
 		address tokenGet,
@@ -132,6 +144,21 @@ contract Exchange {
 		orders[orderCount] = _Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
 
 		emit Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
+	}
+
+	function cancelOrder(uint256 _id) public{
+		
+		//passing the id, fetching the order from the mapping with variable _order of type _Order, fetching from storage
+		_Order storage _order = orders[_id]; 
+		// Must be "my" order
+		require(address(_order.user) == msg.sender);
+
+		// Must be a valid order. The order must exist
+		require(_order.id == _id);
+
+
+		orderCancelled[_id] = true;
+		emit Cancel(_order.id, msg.sender, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive, now);
 	}
 
 }
