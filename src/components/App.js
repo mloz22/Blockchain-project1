@@ -9,9 +9,11 @@ class App extends Component {
   }
 
   async loadBlockchainData() {
-    const web3 = new Web3(window.ethereum)
-    const networkId = await web3.eth.net.getId()
-    const accounts = await web3.eth.getAccounts()
+    const web3 = new Web3(window.ethereum);
+    //const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+    const networkId = await web3.eth.net.getId();
+    //const accounts = await web3.eth.getAccounts()
+    const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
     const token = new web3.eth.Contract(Token.abi, Token.networks[networkId].address)
     const totalSupply = await token.methods.totalSupply().call()
     console.log("totalSupply", totalSupply)
